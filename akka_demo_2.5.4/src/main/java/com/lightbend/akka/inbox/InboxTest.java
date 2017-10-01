@@ -15,12 +15,6 @@ public class InboxTest extends AbstractActor {
     private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
     @Override
-    public SupervisorStrategy supervisorStrategy() {
-        log.info("my supervisorStrategy");
-        return super.supervisorStrategy();
-    }
-
-    @Override
     public Receive createReceive() {
         return receiveBuilder()
                 .match(Greeting.class, greeting -> {
