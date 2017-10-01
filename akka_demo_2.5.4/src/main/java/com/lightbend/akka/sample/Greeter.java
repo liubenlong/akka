@@ -5,7 +5,6 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import com.lightbend.akka.sample.Printer.Greeting;
 
 //#greeter-messages
 public class Greeter extends AbstractActor {
@@ -22,14 +21,15 @@ public class Greeter extends AbstractActor {
 
     //#greeter-messages
     static public Props props(String message, ActorRef printerActor) {
-        return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
+//        return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
+        return Props.create(Greeter.class, "");
     }
 
     @Override
     public Receive createReceive() {
         return receiveBuilder()
                 .match(WhoToGreet.class, wtg -> this.greeting = message + ", " + wtg.who)
-                .match(Greet.class, x -> printerActor.tell(new Greeting(greeting), getSelf()))
+                .match(Greet.class, x -> printerActor.tell(new Printer.Greeting(greeting), getSelf()))
                 .matchAny(o -> log.error("received unknown message"))
                 .build();
     }

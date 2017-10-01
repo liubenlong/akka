@@ -2,8 +2,6 @@ package com.lightbend.akka.sample;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import com.lightbend.akka.sample.Greeter.Greet;
-import com.lightbend.akka.sample.Greeter.WhoToGreet;
 
 import java.io.IOException;
 
@@ -20,21 +18,22 @@ public class AkkaQuickstart {
 
             //#main-send-messages
             howdyGreeter.tell("sss", ActorRef.noSender());
-            howdyGreeter.tell(new Greet(), ActorRef.noSender());
+            howdyGreeter.tell(new Greeter.Greet(), ActorRef.noSender());
 
-            howdyGreeter.tell(new WhoToGreet("Lightbend"), ActorRef.noSender());
-            howdyGreeter.tell(new Greet(), ActorRef.noSender());
+            howdyGreeter.tell(new Greeter.WhoToGreet("Lightbend"), ActorRef.noSender());
+            howdyGreeter.tell(new Greeter.Greet(), ActorRef.noSender());
 
-            helloGreeter.tell(new WhoToGreet("Java"), ActorRef.noSender());
-            helloGreeter.tell(new Greet(), ActorRef.noSender());
+            helloGreeter.tell(new Greeter.WhoToGreet("Java"), ActorRef.noSender());
+            helloGreeter.tell(new Greeter.Greet(), ActorRef.noSender());
 
-            goodDayGreeter.tell(new WhoToGreet("Play"), ActorRef.noSender());
-            goodDayGreeter.tell(new Greet(), ActorRef.noSender());
+            goodDayGreeter.tell(new Greeter.WhoToGreet("Play"), ActorRef.noSender());
+            goodDayGreeter.tell(new Greeter.Greet(), ActorRef.noSender());
             //#main-send-messages
 
             System.out.println(">>> Press ENTER to exit <<<");
             System.in.read();
-        } catch (IOException ioe) {
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             system.terminate();
         }
