@@ -46,9 +46,9 @@ public class InboxTest extends AbstractActor {
         Inbox inbox = Inbox.create(system);
 
         //监控inboxTest
-        inbox.watch(inboxTest);
+//        inbox.watch(inboxTest);
 //        杀死inboxTest
-        inboxTest.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//        inboxTest.tell(PoisonPill.getInstance(), ActorRef.noSender());
 
         //通过inbox来发送消息
         inbox.send(inboxTest, new Greeting("tom"));
