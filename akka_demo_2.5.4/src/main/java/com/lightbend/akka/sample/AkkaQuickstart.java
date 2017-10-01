@@ -19,7 +19,7 @@ public class AkkaQuickstart {
             //#create-actors
 
             //#main-send-messages
-            howdyGreeter.tell(new WhoToGreet("Akka"), ActorRef.noSender());
+            howdyGreeter.tell("sss", ActorRef.noSender());
             howdyGreeter.tell(new Greet(), ActorRef.noSender());
 
             howdyGreeter.tell(new WhoToGreet("Lightbend"), ActorRef.noSender());

@@ -1,6 +1,5 @@
 package helloword;
 
-import akka.Msg;
 import akka.actor.UntypedActor;
 public class Greeter extends UntypedActor {
 

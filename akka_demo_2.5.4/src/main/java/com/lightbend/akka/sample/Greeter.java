@@ -3,10 +3,14 @@ package com.lightbend.akka.sample;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import com.lightbend.akka.sample.Printer.Greeting;
 
 //#greeter-messages
 public class Greeter extends AbstractActor {
+    private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
+
     //#greeter-messages
     static public Props props(String message, ActorRef printerActor) {
         return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
@@ -39,8 +43,8 @@ public class Greeter extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(WhoToGreet.class, wtg -> this.greeting = message + ", " + wtg.who)
-                //#greeter-send-message
                 .match(Greet.class, x -> printerActor.tell(new Greeting(greeting), getSelf()))
+                .matchAny(o -> log.error("received unknown message"))
                 .build();
     }
 }

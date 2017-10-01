@@ -3,6 +3,7 @@ import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import akka.japi.Procedure;
 import com.typesafe.config.ConfigFactory;
+import helloword.Msg;
 
 /**
  * Created by liubenlong on 2017/1/12.

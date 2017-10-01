@@ -1,6 +1,5 @@
 package helloword;
 
-import akka.Msg;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.actor.ActorRef;

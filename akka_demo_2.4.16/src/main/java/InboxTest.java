@@ -2,6 +2,7 @@ import akka.actor.*;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.typesafe.config.ConfigFactory;
+import helloword.Msg;
 import scala.concurrent.duration.Duration;
 
 import java.util.concurrent.TimeUnit;
@@ -16,20 +17,20 @@ public class InboxTest extends UntypedActor {
 
     @Override
     public void onReceive(Object o) throws Throwable {
-        if(o == Msg.WORKING){
+        if (o == Msg.WORKING) {
             log.info("i am working.");
-        }else if(o == Msg.DONE){
+        } else if (o == Msg.DONE) {
             log.info("i am done");
-        }else if(o == Msg.CLOSE){
+        } else if (o == Msg.CLOSE) {
             log.info("i am close.");
             getSender().tell(Msg.CLOSE, getSelf());//告诉消息发送者我要关闭了。
             getContext().stop(getSelf());//关闭自己
-        }else{
+        } else {
             unhandled(o);
         }
     }
 
-    public static void main(String [] args){
+    public static void main(String[] args) {
         ActorSystem system = ActorSystem.create("inbox", ConfigFactory.load("reference.conf"));
         ActorRef inboxTest = system.actorOf(Props.create(InboxTest.class), "InboxTest");
 
@@ -40,16 +41,16 @@ public class InboxTest extends UntypedActor {
         inbox.send(inboxTest, Msg.DONE);
         inbox.send(inboxTest, Msg.CLOSE);
 
-        while(true){
+        while (true) {
             try {
                 Object receive = inbox.receive(Duration.create(1, TimeUnit.SECONDS));
-                if(receive == Msg.CLOSE){//收到的inbox的消息
+                if (receive == Msg.CLOSE) {//收到的inbox的消息
                     System.out.println("inboxTextActor is closing");
-                }else if(receive instanceof  Terminated){//中断 ，和线程一个概念
+                } else if (receive instanceof Terminated) {//中断 ，和线程一个概念
                     System.out.println("inboxTextActor is closed");
                     system.shutdown();
                     break;
-                }else {
+                } else {
                     System.out.println(receive);
                 }
             } catch (TimeoutException e) {

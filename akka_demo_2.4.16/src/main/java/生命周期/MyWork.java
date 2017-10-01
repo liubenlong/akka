@@ -1,9 +1,9 @@
 package 生命周期;
 
-import akka.Msg;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import helloword.Msg;
 
 public class MyWork extends UntypedActor {
 
@@ -22,18 +22,18 @@ public class MyWork extends UntypedActor {
     @Override
     public void onReceive(Object msg) {
         try {
-            if(msg == Msg.WORKING){
+            if (msg == Msg.WORKING) {
                 logger.info("i am  working");
-            }else if(msg == Msg.DONE){
+            } else if (msg == Msg.DONE) {
                 logger.info("stop  working");
-            }else if(msg == Msg.CLOSE){
+            } else if (msg == Msg.CLOSE) {
                 logger.info("stop  close");
                 getSender().tell(Msg.CLOSE, getSelf());
                 getContext().stop(getSelf());
-            }else {
+            } else {
                 unhandled(msg);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

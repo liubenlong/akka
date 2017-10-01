@@ -11,29 +11,27 @@ import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.typesafe.config.ConfigFactory;
 
-import static akka.myCluster.TransformationMessages.BACKEND_REGISTRATION;
-
 public class MyAkkaClusterServer extends UntypedActor {
 
     LoggingAdapter logger = Logging.getLogger(getContext().system(), this);
 
     Cluster cluster = Cluster.get(getContext().system());
-  
+
     // subscribe to cluster changes  
-    @Override  
-    public void preStart() {  
+    @Override
+    public void preStart() {
         // #subscribe  
         cluster.subscribe(getSelf(), ClusterEvent.MemberUp.class);
         // #subscribe  
-    }  
-  
+    }
+
     // re-subscribe when restart  
-    @Override  
-    public void postStop() {  
-        cluster.unsubscribe(getSelf());  
-    }  
-  
-    @Override  
+    @Override
+    public void postStop() {
+        cluster.unsubscribe(getSelf());
+    }
+
+    @Override
     public void onReceive(Object message) {
         if (message instanceof TransformationMessages.TransformationJob) {
             TransformationMessages.TransformationJob job = (TransformationMessages.TransformationJob) message;
@@ -66,14 +64,15 @@ public class MyAkkaClusterServer extends UntypedActor {
 
     /**
      * 如果是客户端角色，则像客户端注册自己的信息。客户端收到消息以后会讲这个服务端存到本机服务列表中
+     *
      * @param member
      */
     void register(Member member) {
         if (member.hasRole("client"))
-            getContext().actorSelection(member.address() + "/user/myAkkaClusterClient").tell(BACKEND_REGISTRATION, getSelf());
+            getContext().actorSelection(member.address() + "/user/myAkkaClusterClient").tell(TransformationMessages.BACKEND_REGISTRATION, getSelf());
     }
 
-    public static void main(String [] args){
+    public static void main(String[] args) {
         System.out.println("Start MyAkkaClusterServer");
         ActorSystem system = ActorSystem.create("akkaClusterTest", ConfigFactory.load("reference.conf"));
         system.actorOf(Props.create(MyAkkaClusterServer.class), "myAkkaClusterServer");

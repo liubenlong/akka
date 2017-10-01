@@ -1,8 +1,8 @@
 package strategy;
 
-import akka.Msg;
 import akka.actor.*;
 import com.typesafe.config.ConfigFactory;
+import helloword.Msg;
 
 /**
  * Created by liubenlong on 2017/1/12.

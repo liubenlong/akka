@@ -1,7 +1,7 @@
 package strategy;
 
-import akka.Msg;
 import akka.actor.UntypedActor;
+import helloword.Msg;
 import scala.Option;
 
 /**
