@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class RouterTest extends UntypedActor {
 
+    public static AtomicBoolean flag = new AtomicBoolean(true);
     public Router router;
 
     {
@@ -33,6 +34,22 @@ public class RouterTest extends UntypedActor {
         router = new Router(new RoundRobinRoutingLogic(), routees);
     }
 
+    public static void main(String[] args) throws InterruptedException {
+        ActorSystem system = ActorSystem.create("strategy", ConfigFactory.load("akka.config"));
+        ActorRef routerTest = system.actorOf(Props.create(RouterTest.class), "RouterTest");
+
+        int i = 1;
+        while (flag.get()) {
+            routerTest.tell(Msg.WORKING, ActorRef.noSender());
+
+            if (i % 10 == 0) routerTest.tell(Msg.CLOSE, ActorRef.noSender());
+
+            Thread.sleep(100);
+
+            i++;
+        }
+    }
+
     @Override
     public void onReceive(Object o) throws Throwable {
         if (o instanceof Msg) {
@@ -50,24 +67,5 @@ public class RouterTest extends UntypedActor {
             unhandled(o);
         }
 
-    }
-
-
-    public static AtomicBoolean flag = new AtomicBoolean(true);
-
-    public static void main(String[] args) throws InterruptedException {
-        ActorSystem system = ActorSystem.create("strategy", ConfigFactory.load("akka.config"));
-        ActorRef routerTest = system.actorOf(Props.create(RouterTest.class), "RouterTest");
-
-        int i = 1;
-        while (flag.get()) {
-            routerTest.tell(Msg.WORKING, ActorRef.noSender());
-
-            if (i % 10 == 0) routerTest.tell(Msg.CLOSE, ActorRef.noSender());
-
-            Thread.sleep(100);
-
-            i++;
-        }
     }
 }

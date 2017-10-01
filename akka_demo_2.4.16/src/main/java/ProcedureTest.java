@@ -11,7 +11,21 @@ import helloword.Msg;
 public class ProcedureTest extends UntypedActor {
 
     private final LoggingAdapter log = Logging.getLogger(getContext().system(), this);
-
+    Procedure<Object> angray = new Procedure<Object>() {
+        @Override
+        public void apply(Object o) throws Exception {
+            log.info("i am angray! " + o);
+            if (o == Msg.SLEEP) {
+                getSender().tell("i am alrady angray!!", getSelf());
+                log.info("i am alrady angray!!");
+            } else if (o == Msg.PLAY) {
+                log.info("i like play.");
+                getContext().become(happy);
+            } else {
+                unhandled(o);
+            }
+        }
+    };
     Procedure<Object> happy = new Procedure<Object>() {
         @Override
         public void apply(Object o) throws Exception {
@@ -28,38 +42,6 @@ public class ProcedureTest extends UntypedActor {
         }
     };
 
-    Procedure<Object> angray = new Procedure<Object>() {
-        @Override
-        public void apply(Object o) throws Exception {
-            log.info("i am angray! "+o);
-            if(o ==Msg.SLEEP){
-                getSender().tell("i am alrady angray!!", getSelf());
-                log.info("i am alrady angray!!");
-            } else if(o ==Msg.PLAY) {
-                log.info("i like play.");
-                getContext().become(happy);
-            } else {
-                unhandled(o);
-            }
-        }
-    };
-
-
-    @Override
-    public void onReceive(Object o) throws Throwable {
-        log.info("onReceive msg: " + o);
-        if(o == Msg.SLEEP){
-            getContext().become(angray);//状态切换
-        }else if(o == Msg.PLAY){
-            getContext().become(happy);
-        }else {
-            unhandled(o);
-        }
-
-    }
-
-
-
     public static void main(String[] args) throws InterruptedException {
         ActorSystem system = ActorSystem.create("strategy", ConfigFactory.load("akka.config"));
         ActorRef procedureTest = system.actorOf(Props.create(ProcedureTest.class), "ProcedureTest");
@@ -70,5 +52,18 @@ public class ProcedureTest extends UntypedActor {
         procedureTest.tell(Msg.PLAY, ActorRef.noSender());
 
         procedureTest.tell(PoisonPill.getInstance(), ActorRef.noSender());//杀死actor
+    }
+
+    @Override
+    public void onReceive(Object o) throws Throwable {
+        log.info("onReceive msg: " + o);
+        if (o == Msg.SLEEP) {
+            getContext().become(angray);//状态切换
+        } else if (o == Msg.PLAY) {
+            getContext().become(happy);
+        } else {
+            unhandled(o);
+        }
+
     }
 }

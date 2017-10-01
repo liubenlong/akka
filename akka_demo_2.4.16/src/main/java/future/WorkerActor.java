@@ -1,6 +1,6 @@
 package future;
 
-import akka.actor.*;
+import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
@@ -18,7 +18,7 @@ public class WorkerActor extends UntypedActor {
         if (o instanceof Integer) {
             Thread.sleep(1000);
             int i = Integer.parseInt(o.toString());
-            getSender().tell(i*i, getSelf());
+            getSender().tell(i * i, getSelf());
         } else {
             unhandled(o);
         }

@@ -9,11 +9,29 @@ import com.lightbend.akka.sample.Printer.Greeting;
 
 //#greeter-messages
 public class Greeter extends AbstractActor {
+    private final String message;
+    private final ActorRef printerActor;
     private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
+    private String greeting = "";
+    //#greeter-messages
+
+    public Greeter(String message, ActorRef printerActor) {
+        this.message = message;
+        this.printerActor = printerActor;
+    }
 
     //#greeter-messages
     static public Props props(String message, ActorRef printerActor) {
         return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
+    }
+
+    @Override
+    public Receive createReceive() {
+        return receiveBuilder()
+                .match(WhoToGreet.class, wtg -> this.greeting = message + ", " + wtg.who)
+                .match(Greet.class, x -> printerActor.tell(new Greeting(greeting), getSelf()))
+                .matchAny(o -> log.error("received unknown message"))
+                .build();
     }
 
     //#greeter-messages
@@ -26,25 +44,7 @@ public class Greeter extends AbstractActor {
     }
 
     static public class Greet {
-        public Greet() {}
-    }
-    //#greeter-messages
-
-    private final String message;
-    private final ActorRef printerActor;
-    private String greeting = "";
-
-    public Greeter(String message, ActorRef printerActor) {
-        this.message = message;
-        this.printerActor = printerActor;
-    }
-
-    @Override
-    public Receive createReceive() {
-        return receiveBuilder()
-                .match(WhoToGreet.class, wtg -> this.greeting = message + ", " + wtg.who)
-                .match(Greet.class, x -> printerActor.tell(new Greeting(greeting), getSelf()))
-                .matchAny(o -> log.error("received unknown message"))
-                .build();
+        public Greet() {
+        }
     }
 }

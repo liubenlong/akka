@@ -7,9 +7,22 @@ import akka.event.LoggingAdapter;
 
 //#printer-messages
 public class Printer extends AbstractActor {
+    private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
+
+    public Printer() {
+    }
+    //#printer-messages
+
     //#printer-messages
     static public Props props() {
         return Props.create(Printer.class, () -> new Printer());
+    }
+
+    @Override
+    public Receive createReceive() {
+        return receiveBuilder()
+                .match(Greeting.class, greeting -> log.info(greeting.message))
+                .build();
     }
 
     //#printer-messages
@@ -19,19 +32,6 @@ public class Printer extends AbstractActor {
         public Greeting(String message) {
             this.message = message;
         }
-    }
-    //#printer-messages
-
-    private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
-
-    public Printer() {
-    }
-
-    @Override
-    public Receive createReceive() {
-        return receiveBuilder()
-                .match(Greeting.class, greeting -> log.info(greeting.message))
-                .build();
     }
 //#printer-messages
 }

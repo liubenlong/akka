@@ -6,7 +6,6 @@ import akka.dispatch.Mapper;
 import akka.dispatch.OnComplete;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import com.typesafe.config.ConfigFactory;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 
@@ -14,44 +13,22 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by liubenlong on 2017/1/12.
  */
 public class AgentTest extends UntypedActor {
 
-    private final LoggingAdapter log = Logging.getLogger(getContext().system(), this);
-
-    @Override
-    public void onReceive(Object o) throws Throwable {
-        if(o instanceof Integer){
-            for(int i = 0 ; i < 10000 ; i ++){
-                Future<Integer> future = countAgent.alter(new Mapper<Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer parameter) {
-                        return parameter + 1;
-                    }
-                });
-                queue.add(future);
-            }
-
-            getContext().stop(getSelf());//完成任务，关闭自己
-        }else{
-            unhandled(o);
-        }
-    }
-
-
     public static CountDownLatch latch = new CountDownLatch(10);
     public static Agent<Integer> countAgent = Agent.create(0, ExecutionContexts.global());
     public static ConcurrentLinkedQueue<Future<Integer>> queue = new ConcurrentLinkedQueue<>();
+    private final LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
-    public static void main(String [] args) throws InterruptedException, TimeoutException {
+    public static void main(String[] args) throws InterruptedException, TimeoutException {
         ActorSystem system = ActorSystem.create("inbox");
 
         ActorRef[] actorRefs = new ActorRef[10];
-        for(int i = 0 ; i < 10 ; i ++){
+        for (int i = 0; i < 10; i++) {
             actorRefs[i] = system.actorOf(Props.create(AgentTest.class), "AgentTest" + i);
         }
 
@@ -71,14 +48,14 @@ public class AgentTest extends UntypedActor {
 
         //等待所有actor执行完毕
         int closeCount = 0;
-        while(true){
+        while (true) {
             Object o = inbox.receive(Duration.create(1, TimeUnit.SECONDS));
-            if(o instanceof Terminated){
-                closeCount ++;
-                if(closeCount == actorRefs.length){
+            if (o instanceof Terminated) {
+                closeCount++;
+                if (closeCount == actorRefs.length) {
                     break;
                 }
-            }else{
+            } else {
                 System.out.println("o:" + o);
             }
         }
@@ -94,5 +71,24 @@ public class AgentTest extends UntypedActor {
             }
         }, system.dispatcher());
 
+    }
+
+    @Override
+    public void onReceive(Object o) throws Throwable {
+        if (o instanceof Integer) {
+            for (int i = 0; i < 10000; i++) {
+                Future<Integer> future = countAgent.alter(new Mapper<Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer parameter) {
+                        return parameter + 1;
+                    }
+                });
+                queue.add(future);
+            }
+
+            getContext().stop(getSelf());//完成任务，关闭自己
+        } else {
+            unhandled(o);
+        }
     }
 }

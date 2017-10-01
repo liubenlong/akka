@@ -17,15 +17,23 @@ public class MyAkkaClusterServer extends UntypedActor {
 
     Cluster cluster = Cluster.get(getContext().system());
 
-    // subscribe to cluster changes  
-    @Override
-    public void preStart() {
-        // #subscribe  
-        cluster.subscribe(getSelf(), ClusterEvent.MemberUp.class);
-        // #subscribe  
+    public static void main(String[] args) {
+        System.out.println("Start MyAkkaClusterServer");
+        ActorSystem system = ActorSystem.create("akkaClusterTest", ConfigFactory.load("reference.conf"));
+        system.actorOf(Props.create(MyAkkaClusterServer.class), "myAkkaClusterServer");
+        System.out.println("Started MyAkkaClusterServer");
+
     }
 
-    // re-subscribe when restart  
+    // subscribe to cluster changes
+    @Override
+    public void preStart() {
+        // #subscribe
+        cluster.subscribe(getSelf(), ClusterEvent.MemberUp.class);
+        // #subscribe
+    }
+
+    // re-subscribe when restart
     @Override
     public void postStop() {
         cluster.unsubscribe(getSelf());
@@ -70,13 +78,5 @@ public class MyAkkaClusterServer extends UntypedActor {
     void register(Member member) {
         if (member.hasRole("client"))
             getContext().actorSelection(member.address() + "/user/myAkkaClusterClient").tell(TransformationMessages.BACKEND_REGISTRATION, getSelf());
-    }
-
-    public static void main(String[] args) {
-        System.out.println("Start MyAkkaClusterServer");
-        ActorSystem system = ActorSystem.create("akkaClusterTest", ConfigFactory.load("reference.conf"));
-        system.actorOf(Props.create(MyAkkaClusterServer.class), "myAkkaClusterServer");
-        System.out.println("Started MyAkkaClusterServer");
-
     }
 }

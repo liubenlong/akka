@@ -15,21 +15,6 @@ public class InboxTest extends UntypedActor {
 
     private final LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
-    @Override
-    public void onReceive(Object o) throws Throwable {
-        if (o == Msg.WORKING) {
-            log.info("i am working.");
-        } else if (o == Msg.DONE) {
-            log.info("i am done");
-        } else if (o == Msg.CLOSE) {
-            log.info("i am close.");
-            getSender().tell(Msg.CLOSE, getSelf());//告诉消息发送者我要关闭了。
-            getContext().stop(getSelf());//关闭自己
-        } else {
-            unhandled(o);
-        }
-    }
-
     public static void main(String[] args) {
         ActorSystem system = ActorSystem.create("inbox", ConfigFactory.load("reference.conf"));
         ActorRef inboxTest = system.actorOf(Props.create(InboxTest.class), "InboxTest");
@@ -56,6 +41,21 @@ public class InboxTest extends UntypedActor {
             } catch (TimeoutException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void onReceive(Object o) throws Throwable {
+        if (o == Msg.WORKING) {
+            log.info("i am working.");
+        } else if (o == Msg.DONE) {
+            log.info("i am done");
+        } else if (o == Msg.CLOSE) {
+            log.info("i am close.");
+            getSender().tell(Msg.CLOSE, getSelf());//告诉消息发送者我要关闭了。
+            getContext().stop(getSelf());//关闭自己
+        } else {
+            unhandled(o);
         }
     }
 }

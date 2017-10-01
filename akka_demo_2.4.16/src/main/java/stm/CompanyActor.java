@@ -1,6 +1,6 @@
 package stm;
 
-import akka.actor.*;
+import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import akka.transactor.Coordinated;
@@ -18,22 +18,22 @@ public class CompanyActor extends UntypedActor {
 
     @Override
     public void onReceive(Object o) throws Throwable {
-        if(o instanceof Coordinated){
+        if (o instanceof Coordinated) {
             Coordinated coordinated = (Coordinated) o;
             int downCount = (int) coordinated.getMessage();//传递过来的参数，减多少。
             STMMain.employeeActor.tell(coordinated.coordinate(downCount), getSelf());//通知employeeActor增加费用
 
             try {//注意这里异常要及时处理，否则异常会一直扩散，导致回退到系统刚启动时的初始状态！
                 coordinated.atomic(() -> {
-                    if(count.get() < downCount) throw new RuntimeException("余额不足！");
+                    if (count.get() < downCount) throw new RuntimeException("余额不足！");
                     STM.increment(count, -downCount);//减余额
                 });
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else if("getCount".equals(o)){
+        } else if ("getCount".equals(o)) {
             getSender().tell(count.get(), getSelf());
-        }else{
+        } else {
             unhandled(o);
         }
     }

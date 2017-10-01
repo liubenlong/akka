@@ -1,6 +1,9 @@
 package strategy;
 
-import akka.actor.*;
+import akka.actor.ActorRef;
+import akka.actor.ActorSelection;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
 import com.typesafe.config.ConfigFactory;
 import helloword.Msg;
 
@@ -17,7 +20,7 @@ public class Main {
         ActorSelection actorSelection = system.actorSelection("akka://strategy/user/SuperVisor/restartActor");
 
 
-        for(int i = 0 ; i < 100 ; i ++){
+        for (int i = 0; i < 100; i++) {
             actorSelection.tell(Msg.RESTART, ActorRef.noSender());
         }
     }

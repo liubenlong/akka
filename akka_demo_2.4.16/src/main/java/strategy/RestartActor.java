@@ -13,17 +13,18 @@ public class RestartActor extends UntypedActor {
     public void preStart() throws Exception {
         System.out.println("preStart    hashCode=" + this.hashCode());
     }
+
     @Override
     public void postStop() throws Exception {
         System.out.println("postStop    hashCode=" + this.hashCode());
     }
 
 
-
     @Override
     public void preRestart(Throwable reason, Option<Object> message) throws Exception {
         System.out.println("preRestart    hashCode=" + this.hashCode());
     }
+
     @Override
     public void postRestart(Throwable reason) throws Exception {
         super.postRestart(reason);
@@ -31,16 +32,15 @@ public class RestartActor extends UntypedActor {
     }
 
 
-
     @Override
     public void onReceive(Object o) throws Throwable {
-        if(o == Msg.DONE){
+        if (o == Msg.DONE) {
             getContext().stop(getSelf());
-        }else if(o == Msg.RESTART){
+        } else if (o == Msg.RESTART) {
             System.out.println(((Object) null).toString());
             //抛出异常，默认会被restart，但这里会resume
-            double a = 1/0;
-        }else{
+            double a = 1 / 0;
+        } else {
             unhandled(o);
         }
 

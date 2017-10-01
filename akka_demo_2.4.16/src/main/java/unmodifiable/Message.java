@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Created by liubenlong on 2017/1/5.
- *
+ * <p>
  * actor中传递的对象要是不可变对象。当然是为了安全了
  */
 public final class Message {
@@ -13,7 +13,7 @@ public final class Message {
     private final int age;
     private final List<String> list;
 
-    public Message(int age, List<String> list){
+    public Message(int age, List<String> list) {
         this.age = age;
         /**
          * 把普通list包装为不可变对象

@@ -18,14 +18,14 @@ public class STMMain {
     public static ActorRef employeeActor = null;
 
 
-    public static void main(String [] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         ActorSystem system = ActorSystem.create("stm");
         companyActor = system.actorOf(Props.create(CompanyActor.class), "CompanyActor");
         employeeActor = system.actorOf(Props.create(EmployeeActor.class), "EmployeeActor");
 
         Timeout timeout = new Timeout(1, TimeUnit.SECONDS);
 
-        for(int i = 0 ; i < 23; i ++){
+        for (int i = 0; i < 23; i++) {
             companyActor.tell(new Coordinated(i, timeout), ActorRef.noSender());
 
             Thread.sleep(200);

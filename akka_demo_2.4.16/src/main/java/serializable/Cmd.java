@@ -12,15 +12,15 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
- 
+
 class Cmd implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String data;
- 
+
     public Cmd(String data) {
         this.data = data;
     }
- 
+
     public String getData() {
         return data;
     }
@@ -44,7 +44,7 @@ class Evt implements Serializable {
         return data;
     }
 }
- 
+
 class ExampleState implements Serializable {
     private static final long serialVersionUID = 1L;
     private final ArrayList<String> events;
@@ -77,12 +77,13 @@ class ExampleState implements Serializable {
 
 class ExamplePersistentActor extends UntypedPersistentActor {
 
-    LoggingAdapter log = Logging.getLogger(getContext().system (), this );
+    LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+    private ExampleState state = new ExampleState();
 
     @Override
-    public String persistenceId() { return "sample-id-1"; }
-
-    private ExampleState state = new ExampleState();
+    public String persistenceId() {
+        return "sample-id-1";
+    }
 
     public int getNumEvents() {
         return state.size();
@@ -90,6 +91,7 @@ class ExamplePersistentActor extends UntypedPersistentActor {
 
     /**
      * Called on restart. Loads from Snapshot first, and then replays Journal Events to update state.
+     *
      * @param msg
      */
     @Override
@@ -101,21 +103,22 @@ class ExamplePersistentActor extends UntypedPersistentActor {
             state.update((Evt) msg);
         } else if (msg instanceof SnapshotOffer) {
             log.info("onReceiveRecover -- msg instanceof SnapshotOffer");
-            state = (ExampleState)((SnapshotOffer)msg).snapshot();
+            state = (ExampleState) ((SnapshotOffer) msg).snapshot();
         } else {
-          unhandled(msg);
+            unhandled(msg);
         }
     }
 
     /**
      * Called on Command dispatch
+     *
      * @param msg
      */
     @Override
     public void onReceiveCommand(Object msg) {
         log.info("onReceiveCommand: " + JSON.toJSONString(msg));
         if (msg instanceof Cmd) {
-            final String data = ((Cmd)msg).getData();
+            final String data = ((Cmd) msg).getData();
 
             // generate an event we will persist after being enriched with a uuid
             final Evt evt1 = new Evt(data + "-" + getNumEvents(), UUID.randomUUID().toString());
@@ -136,7 +139,7 @@ class ExamplePersistentActor extends UntypedPersistentActor {
         } else if (msg.equals("print")) {
             System.out.println("state:  " + state);
         } else {
-          unhandled(msg);
+            unhandled(msg);
         }
     }
 }
@@ -147,7 +150,7 @@ class EventHandler extends UntypedActor {
     LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     @Override
-    public void onReceive(Object msg ) throws Exception {
-        log.info( "Handled Event: " + JSON.toJSONString(msg));
+    public void onReceive(Object msg) throws Exception {
+        log.info("Handled Event: " + JSON.toJSONString(msg));
     }
 }
