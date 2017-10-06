@@ -22,6 +22,7 @@ public class Printer extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(Greeting.class, greeting -> log.info(greeting.message))
+                .matchAny(o -> log.error("the msg:{}  is not support!", o))
                 .build();
     }
 

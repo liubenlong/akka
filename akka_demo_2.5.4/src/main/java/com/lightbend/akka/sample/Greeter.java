@@ -21,8 +21,7 @@ public class Greeter extends AbstractActor {
 
     //#greeter-messages
     static public Props props(String message, ActorRef printerActor) {
-//        return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
-        return Props.create(Greeter.class, "");
+        return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
     }
 
     @Override
