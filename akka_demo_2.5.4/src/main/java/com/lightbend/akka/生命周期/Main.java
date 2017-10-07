@@ -4,6 +4,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.DeadLetter;
 import akka.actor.PoisonPill;
+import akka.event.DeadLetterListener;
 import com.lightbend.akka.sample.Printer;
 
 import java.util.concurrent.TimeUnit;
@@ -28,7 +29,7 @@ public class Main {
         printerActor.tell(new Printer.Greeting("hello "), ActorRef.noSender());
 
 
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(1);
         system.terminate();
     }
 }
