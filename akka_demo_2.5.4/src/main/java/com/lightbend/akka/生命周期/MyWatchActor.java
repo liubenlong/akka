@@ -23,8 +23,6 @@ public class MyWatchActor extends AbstractActor {
                     log.info(JSONObject.toJSONString(d.message()));
                     log.info(d.toString());
                 })
-                .match(Terminated.class, t -> log.info(t.getActor().path() + " has Terminated."))
-                .match(Printer.Greeting.class, greeting -> log.info(greeting.message))
                 .matchAny(o -> log.error("the msg:{}  is not support!", o))
                 .build();
     }
