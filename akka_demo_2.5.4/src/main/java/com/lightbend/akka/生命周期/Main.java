@@ -15,8 +15,10 @@ public class Main {
         final ActorSystem system = ActorSystem.create("helloakka");
         ActorRef printerActor = system.actorOf(Printer.props(), "printerActor");
 
+        //这两句用于从事件总线中监控DeadLetter消息
         ActorRef myWatchActor = system.actorOf(MyWatchActor.props(), "myWatchActor");
         system.eventStream().subscribe(myWatchActor, DeadLetter.class);
+
 
         printerActor.tell(new Printer.Greeting("hi tom "), ActorRef.noSender());
 //        终止printerActor
