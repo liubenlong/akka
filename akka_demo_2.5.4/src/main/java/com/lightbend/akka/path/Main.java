@@ -13,10 +13,9 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         final ActorSystem system = ActorSystem.create("akkaPath");
-        ActorRef printerActor1 = system.actorOf(Printer1.props(), "printerActor1");
-        ActorRef printerActor2 = system.actorOf(Printer2.props(), "printerActor2");
+        ActorRef follower = system.actorOf(Follower.props(), "follower");
 
-        printerActor1.tell(new Printer.Greeting("hi tom "), ActorRef.noSender());
+        follower.tell(new Printer.Greeting("hi tom "), ActorRef.noSender());
 
 
         TimeUnit.SECONDS.sleep(1);
