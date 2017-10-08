@@ -2,7 +2,6 @@ package com.lightbend.akka.path;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
-import akka.actor.ActorSelection;
 import akka.actor.Props;
 import akka.dispatch.OnComplete;
 import akka.event.Logging;
@@ -13,7 +12,6 @@ import scala.concurrent.duration.Duration;
 
 import java.util.concurrent.TimeUnit;
 
-//#printer-messages
 public class Factory extends AbstractActor {
     private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
@@ -27,7 +25,7 @@ public class Factory extends AbstractActor {
                 .match(FactoryMsg.class, f -> {
                     if ("find".equals(f.message)) {
                         Future<ActorRef> future = getContext().actorSelection("printer*").resolveOne(Duration.create(2, TimeUnit.SECONDS));
-                        future.onComplete(new OnComplete<ActorRef>(){
+                        future.onComplete(new OnComplete<ActorRef>() {
                             @Override
                             public void onComplete(Throwable throwable, ActorRef actorRef) throws Throwable {
                                 actorRef.tell(new Printer.Greeting("hello word."), getSelf());
@@ -45,7 +43,6 @@ public class Factory extends AbstractActor {
 
     static public class FactoryMsg {
         public final String message;
-
         public FactoryMsg(String message) {
             this.message = message;
         }
