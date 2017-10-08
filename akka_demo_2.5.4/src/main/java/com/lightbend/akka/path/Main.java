@@ -15,15 +15,16 @@ public class Main {
         ActorRef printerActor22 = system.actorOf(Printer.props(), "printerActor22");
         ActorRef factory = system.actorOf(Factory.props(), "factory");
 
-        factory.tell(new Printer.Greeting("hi tom "), ActorRef.noSender());
+        factory.tell(new Factory.FactoryMsg("hi tom "), ActorRef.noSender());
 
-        System.out.println("--------------");
 
-        ActorSelection actorSelection = system.actorSelection("akka://akkaPath/user/printerActor11");
-        ActorRef anchor = actorSelection.anchor();
-        anchor.tell(new Printer.Greeting("haha"), ActorRef.noSender());
+        ActorSelection actorSelection = system.actorSelection("akka://akkaPath/user/printerActor*");
+        actorSelection.tell(new Printer.Greeting("haha"), ActorRef.noSender());
 
-        TimeUnit.SECONDS.sleep(1);
-        system.terminate();
+        factory.tell(new Factory.FactoryMsg("find"), ActorRef.noSender());
+
+
+//        TimeUnit.SECONDS.sleep(1);
+//        system.terminate();
     }
 }
