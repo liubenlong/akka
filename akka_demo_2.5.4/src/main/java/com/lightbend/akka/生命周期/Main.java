@@ -12,6 +12,22 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
+//        test1();
+        testReStart();
+    }
+
+    static void testReStart() throws InterruptedException {
+        ActorSystem system = ActorSystem.create("helloakka");
+        ActorRef printerActor = system.actorOf(Printer.props(), "printerActor");
+
+        printerActor.tell(new Printer.Greeting("hi tom "), ActorRef.noSender());
+        printerActor.tell(new Printer.Greeting("restart"), ActorRef.noSender());
+        printerActor.tell(new Printer.Greeting("restartsss"), ActorRef.noSender());
+
+
+    }
+
+    static void test1() throws InterruptedException {
         final ActorSystem system = ActorSystem.create("helloakka");
         ActorRef printerActor = system.actorOf(Printer.props(), "printerActor");
 
