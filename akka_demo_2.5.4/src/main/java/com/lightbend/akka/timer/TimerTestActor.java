@@ -12,21 +12,15 @@ import java.util.concurrent.TimeUnit;
 
 public class TimerTestActor extends AbstractActorWithTimers {
     private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
-
     private static Object TICK_KEY = "TickKey";
 
-    private static final class FirstTick {
-    }
-
-    private static final class Tick {
-    }
-    private static final class CancelTick {
-    }
+    private static final class FirstTick {}
+    private static final class Tick {}
+    private static final class CancelTick {}
 
     static public Props props() {
         return Props.create(TimerTestActor.class, () -> new TimerTestActor());
     }
-
     public TimerTestActor() {
         log.info("我是构造函数");
         //一次性的任务
@@ -43,9 +37,7 @@ public class TimerTestActor extends AbstractActorWithTimers {
                     getTimers().startPeriodicTimer(TICK_KEY, new Tick(),
                             Duration.create(1, TimeUnit.SECONDS));
                 })
-                .match(Tick.class, message -> {
-                    log.info("收到了Tick类型的消息");
-                })
+                .match(Tick.class, message -> log.info("收到了Tick类型的消息"))
                 .match(CancelTick.class, message -> {
                     log.info("收到了CancelTick类型的消息");
                     getTimers().cancel(TICK_KEY);
@@ -54,7 +46,6 @@ public class TimerTestActor extends AbstractActorWithTimers {
                 .build();
     }
 
-
     public static void main(String[] args) throws InterruptedException {
         ActorSystem system = ActorSystem.create("timerAkka");
         ActorRef timerTestActor = system.actorOf(TimerTestActor.props(), "timerTestActor");
@@ -62,5 +53,4 @@ public class TimerTestActor extends AbstractActorWithTimers {
         TimeUnit.SECONDS.sleep(3);
         timerTestActor.tell(new CancelTick(), ActorRef.noSender());
     }
-
 }
