@@ -64,24 +64,24 @@ public class TimerTestActor extends AbstractActorWithTimers {
         TimeUnit.SECONDS.sleep(3);
 
 //        取消定时器
-//        timerTestActor.tell(new CancelTick(), ActorRef.noSender());
+        timerTestActor.tell(new CancelTick(), ActorRef.noSender());
 
-        /**
-         * 通过Patterns.gracefulStop，停止掉timerTestActor
-         */
-        try {
-            Future<Boolean> future = Patterns.gracefulStop(timerTestActor, Duration.create(5, TimeUnit.SECONDS));
-            future.onComplete(new OnComplete<Boolean>() {
-                @Override
-                public void onComplete(Throwable throwable, Boolean aBoolean) throws Throwable {
-                    System.out.println(aBoolean);
-                    if (throwable != null) throwable.printStackTrace();
-                }
-            }, system.dispatcher());
-
-//            Await.result(future, Duration.create(6, TimeUnit.SECONDS));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        /**
+//         * 通过Patterns.gracefulStop，停止掉timerTestActor
+//         */
+//        try {
+//            Future<Boolean> future = Patterns.gracefulStop(timerTestActor, Duration.create(5, TimeUnit.SECONDS));
+//            future.onComplete(new OnComplete<Boolean>() {
+//                @Override
+//                public void onComplete(Throwable throwable, Boolean aBoolean) throws Throwable {
+//                    System.out.println(aBoolean);
+//                    if (throwable != null) throwable.printStackTrace();
+//                }
+//            }, system.dispatcher());
+//
+////            Await.result(future, Duration.create(6, TimeUnit.SECONDS));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }
