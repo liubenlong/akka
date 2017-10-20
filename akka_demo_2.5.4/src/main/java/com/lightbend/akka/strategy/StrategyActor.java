@@ -20,8 +20,7 @@ public class StrategyActor extends AbstractActor {
                 DeciderBuilder
                         .match(ArithmeticException.class, e -> SupervisorStrategy.resume())
                         .match(NullPointerException.class, (NullPointerException e) -> {
-                            String name = getSender().path().name();
-                            log.info("1111111111111111111" + name);
+                            log.info("发生错误的actor名称是：" + getSender().path());
                             return SupervisorStrategy.restart();
                         })
                         .match(IllegalArgumentException.class, e -> SupervisorStrategy.stop())
