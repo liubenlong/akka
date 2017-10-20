@@ -28,7 +28,10 @@ public class Greeter extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(WhoToGreet.class, wtg -> this.greeting = message + ", " + wtg.who)
-                .match(Greet.class, x -> printerActor.tell(new Printer.Greeting(greeting), getSelf()))
+                .match(Greet.class, x -> {
+                    printerActor.tell(new Printer.Greeting(greeting), getSelf());
+                    getSender().tell(greeting, getSelf());
+                })
                 .matchAny(o -> log.error("received unknown message"))
                 .build();
     }
