@@ -13,10 +13,7 @@ public class Main {
         ActorRef strategyActor = system.actorOf(StrategyActor.props(), "strategyActor");
         strategyActor.tell("createChild", ActorRef.noSender());//创建了子child
 
-
         ActorSelection childActor = system.actorSelection("akka://strategyAkka/user/strategyActor/childActor");
-
-
         childActor.tell("ok", ActorRef.noSender());
         TimeUnit.SECONDS.sleep(1);
         childActor.tell("ArithmeticException", ActorRef.noSender());

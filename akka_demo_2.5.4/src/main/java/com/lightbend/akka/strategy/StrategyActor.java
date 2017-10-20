@@ -16,7 +16,7 @@ public class StrategyActor extends AbstractActor {
 
     @Override
     public SupervisorStrategy supervisorStrategy() {
-        return new OneForOneStrategy(10, Duration.create(1, TimeUnit.MINUTES),
+        return new MyOneForOneStrategy(10, Duration.create(1, TimeUnit.MINUTES),
                 DeciderBuilder
                         .match(ArithmeticException.class, e -> SupervisorStrategy.resume())
                         .match(NullPointerException.class, (NullPointerException e) -> {
