@@ -4,12 +4,15 @@ import akka.actor.AbstractActorWithTimers;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import akka.dispatch.Dispatchers;
 import akka.dispatch.OnComplete;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import akka.pattern.AskTimeoutException;
 import akka.pattern.Patterns;
+import com.typesafe.config.ConfigFactory;
 import scala.concurrent.Await;
+import scala.concurrent.ExecutionContext;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 
@@ -44,6 +47,8 @@ public class TimerTestActor extends AbstractActorWithTimers {
         return receiveBuilder()
                 .match(FirstTick.class, message -> {
                     log.info("收到了FirstTick类型的消息");
+                    log.error("...........");
+                    log.warning("-----------");
                     //周期性任务
                     getTimers().startPeriodicTimer(TICK_KEY, new Tick(),
                             Duration.create(1, TimeUnit.SECONDS));
@@ -58,8 +63,13 @@ public class TimerTestActor extends AbstractActorWithTimers {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ActorSystem system = ActorSystem.create("timerAkka");
-        ActorRef timerTestActor = system.actorOf(TimerTestActor.props(), "timerTestActor");
+        ActorSystem system = ActorSystem.create("timerAkka", ConfigFactory.load("dev.conf"));
+        ActorRef timerTestActor = system.actorOf(TimerTestActor.props().withDispatcher("my-thread-pool-dispatcher"), "timerTestActor");
+
+        //派发器查找。
+        Dispatchers dispatchers = system.dispatchers();
+        ExecutionContext ex = system.dispatchers().lookup("my-thread-pool-dispatcher");
+        System.out.println(ex);
 
         TimeUnit.SECONDS.sleep(3);
 
