@@ -14,7 +14,6 @@ public class MyWatchActor extends AbstractActor {
     }
 
     public MyWatchActor() {
-
     }
 
     @Override
