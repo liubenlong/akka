@@ -64,11 +64,11 @@ public class TimerTestActor extends AbstractActorWithTimers {
 
     public static void main(String[] args) throws InterruptedException {
         ActorSystem system = ActorSystem.create("timerAkka", ConfigFactory.load("dev.conf"));
-        ActorRef timerTestActor = system.actorOf(TimerTestActor.props().withDispatcher("my-thread-pool-dispatcher"), "timerTestActor");
+        ActorRef timerTestActor = system.actorOf(TimerTestActor.props().withDispatcher("akka.my-thread-pool-dispatcher"), "timerTestActor");
 
         //派发器查找。
         Dispatchers dispatchers = system.dispatchers();
-        ExecutionContext ex = system.dispatchers().lookup("my-thread-pool-dispatcher");
+        ExecutionContext ex = system.dispatchers().lookup("akka.my-thread-pool-dispatcher");
         System.out.println(ex);
 
         TimeUnit.SECONDS.sleep(3);
