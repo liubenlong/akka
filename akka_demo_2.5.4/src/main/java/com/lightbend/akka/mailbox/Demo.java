@@ -34,7 +34,7 @@ class Demo extends AbstractActor {
 
     public static void main(String[] args) {
         ActorSystem system = ActorSystem.create("timerAkka", ConfigFactory.load("dev.conf"));
-        ActorRef myActor = system.actorOf(Demo.props().withDispatcher("akka.control-aware-dispatcher"), "demo");
+        ActorRef myActor = system.actorOf(Demo.props().withDispatcher("akka.myUnboundedMailbox-dispatcher"), "demo");
     }
 }
 
