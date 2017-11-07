@@ -13,9 +13,14 @@ class Demo extends AbstractActor {
     }
 
     {
-        for (Object msg : new Object[]{"lowpriority", "lowpriority",
-                "highpriority", "pigdog", "pigdog2", "pigdog3", "highpriority"
-                }) {
+//        for (Object msg : new Object[]{"lowpriority", "lowpriority",
+//                "highpriority", "pigdog", "pigdog2", "pigdog3", "highpriority"
+//                }) {
+//            getSelf().tell(msg, getSelf());
+//        }
+
+        for (Object msg : new Object[] { "foo", "bar", new MyControlMessage("123"), "tom",
+                PoisonPill.getInstance() }) {
             getSelf().tell(msg, getSelf());
         }
     }
@@ -29,7 +34,7 @@ class Demo extends AbstractActor {
 
     public static void main(String[] args) {
         ActorSystem system = ActorSystem.create("timerAkka", ConfigFactory.load("dev.conf"));
-        ActorRef myActor = system.actorOf(Demo.props().withDispatcher("akka.prio-dispatcher"), "demo");
+        ActorRef myActor = system.actorOf(Demo.props().withDispatcher("akka.control-aware-dispatcher"), "demo");
     }
 }
 
