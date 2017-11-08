@@ -11,8 +11,6 @@ import java.util.Random;
 
 public class Printer extends AbstractActor {
     private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
-
-
     static public Props props() {
         return Props.create(Printer.class, () -> new Printer());
     }
@@ -30,7 +28,6 @@ public class Printer extends AbstractActor {
                 .matchAny(o -> log.error("the msg:{}  is not support!", o))
                 .build();
     }
-
 
     static public class Greeting {
         public final String message;

@@ -11,19 +11,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Master extends AbstractActor {
-
     Router router;
-
     {
         List<Routee> routees = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             ActorRef r = getContext().actorOf(Props.create(Printer.class), "print_" + i);
             getContext().watch(r);
             routees.add(new ActorRefRoutee(r));
         }
         router = new Router(new RoundRobinRoutingLogic(), routees);
     }
-
     @Override
     public Receive createReceive() {
         return receiveBuilder()
@@ -42,8 +39,7 @@ public class Master extends AbstractActor {
     public static void main(String[] args) throws InterruptedException {
         ActorSystem system = ActorSystem.create("routeAkka");
         ActorRef myActor = system.actorOf(Props.create(Master.class));
-
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 6; i++) {
             myActor.tell(new Printer.Greeting("a" + i), ActorRef.noSender());
             TimeUnit.MILLISECONDS.sleep(100);
         }
