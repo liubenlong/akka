@@ -40,7 +40,7 @@ public class Master extends AbstractActor {
         ActorSystem system = ActorSystem.create("routeAkka");
         ActorRef myActor = system.actorOf(Props.create(Master.class));
         for (int i = 0; i < 6; i++) {
-            myActor.tell(new Printer.Greeting("a" + i), ActorRef.noSender());
+            myActor.tell(new Printer.Greeting("msg" + i), ActorRef.noSender());
             TimeUnit.MILLISECONDS.sleep(100);
         }
     }
