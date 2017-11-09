@@ -20,10 +20,6 @@ public class Printer extends AbstractActor {
         return receiveBuilder()
                 .match(Greeting.class, greeting -> {
                     log.info(greeting.message+"  hashcode="+this.hashCode());
-                    if(new Random().nextInt(2) == 0){
-                        log.info("i am dead. hashcode="+this.hashCode());
-                        getSelf().tell(PoisonPill.getInstance(), ActorRef.noSender());
-                    }
                 })
                 .matchAny(o -> log.error("the msg:{}  is not support!", o))
                 .build();
