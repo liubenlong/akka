@@ -19,7 +19,8 @@ public class Master extends AbstractActor {
             getContext().watch(r);
             routees.add(new ActorRefRoutee(r));
         }
-        router = new Router(new RoundRobinRoutingLogic(), routees);
+//        router = new Router(new RoundRobinRoutingLogic(), routees);
+        router = new Router(new RedundancyRoutingLogic(2), routees);
     }
     @Override
     public Receive createReceive() {

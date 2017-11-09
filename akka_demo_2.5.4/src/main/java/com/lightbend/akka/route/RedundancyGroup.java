@@ -53,6 +53,7 @@ public class RedundancyGroup extends GroupBase {
         }
 
         ActorRef redundancy1 = system.actorOf(new RedundancyGroup(paths, 3).props(), "redundancy1");
-        redundancy1.tell(new Printer.Greeting("important"), ActorRef.noSender());
+        redundancy1.tell(new Printer.Greeting("importantA"), ActorRef.noSender());
+        redundancy1.tell(new Printer.Greeting("importantB"), ActorRef.noSender());
     }
 }
