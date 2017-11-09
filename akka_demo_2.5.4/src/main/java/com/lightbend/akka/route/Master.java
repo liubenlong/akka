@@ -20,6 +20,8 @@ public class Master extends AbstractActor {
             routees.add(new ActorRefRoutee(r));
         }
 //        router = new Router(new RoundRobinRoutingLogic(), routees);
+
+        //这是自定义的路由规则
         router = new Router(new RedundancyRoutingLogic(2), routees);
     }
     @Override
