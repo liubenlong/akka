@@ -22,7 +22,6 @@ public class RedundancyRoutingLogic implements RoutingLogic {
     public Routee select(Object message, IndexedSeq<Routee> routees) {
         List<Routee> targets = new ArrayList<>();
         for (int i = 0; i < nbrCopies; i++) {
-            System.out.println(message+"  "+i);
             targets.add(roundRobin.select(message, routees));
         }
         return new SeveralRoutees(targets);

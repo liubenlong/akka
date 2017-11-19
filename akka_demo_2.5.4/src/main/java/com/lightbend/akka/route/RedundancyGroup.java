@@ -4,6 +4,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.dispatch.Dispatchers;
+import akka.routing.FromConfig;
 import akka.routing.GroupBase;
 import akka.routing.Router;
 import com.typesafe.config.Config;
@@ -42,18 +43,19 @@ public class RedundancyGroup extends GroupBase {
 
     public static void main(String[] args) throws InterruptedException {
         ActorSystem system = ActorSystem.create("routeAkka", ConfigFactory.load("dev.conf"));
-
         for (int n = 1; n <= 10; n++) {
-            system.actorOf(Props.create(Printer.class), "s" + n);
+            system.actorOf(Props.create(Printer.class), "printer_" + n);
         }
+//        List<String> paths = new ArrayList<>();
+//        for (int n = 1; n <= 10; n++) {
+//            paths.add("/user/printer_" + n);
+//        }
+//
+//        ActorRef redundancy1 = system.actorOf(new RedundancyGroup(paths, 3).props(), "redundancy1");
+//        redundancy1.tell(new Printer.Greeting("importantA"), ActorRef.noSender());
+//        redundancy1.tell(new Printer.Greeting("importantB"), ActorRef.noSender());
 
-        List<String> paths = new ArrayList<>();
-        for (int n = 1; n <= 10; n++) {
-            paths.add("/user/s" + n);
-        }
-
-        ActorRef redundancy1 = system.actorOf(new RedundancyGroup(paths, 3).props(), "redundancy1");
-        redundancy1.tell(new Printer.Greeting("importantA"), ActorRef.noSender());
-        redundancy1.tell(new Printer.Greeting("importantB"), ActorRef.noSender());
+        ActorRef redundancy2 = system.actorOf(FromConfig.getInstance().props(), "redundancy2");
+        redundancy2.tell("importantC", ActorRef.noSender());
     }
 }

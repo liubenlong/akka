@@ -35,7 +35,7 @@ public final class TestRoutee implements Routee {
         RedundancyRoutingLogic logic = new RedundancyRoutingLogic(3);
 
         List<Routee> routeeList = new ArrayList<>();
-        for (int n = 1; n <= 7; n++) {
+        for (int n = 1; n <= 4; n++) {
             routeeList.add(new TestRoutee(n));
         }
         IndexedSeq<Routee> routees = Util.immutableIndexedSeq(routeeList);
@@ -47,12 +47,7 @@ public final class TestRoutee implements Routee {
 
         SeveralRoutees r2 = (SeveralRoutees) logic.select("msg2", routees);
         Assert.assertEquals(r2.getRoutees().get(0), routeeList.get(3));
-        Assert.assertEquals(r2.getRoutees().get(1), routeeList.get(4));
-        Assert.assertEquals(r2.getRoutees().get(2), routeeList.get(5));
-
-        SeveralRoutees r3 = (SeveralRoutees) logic.select("msg3", routees);
-        Assert.assertEquals(r3.getRoutees().get(0), routeeList.get(6));
-        Assert.assertEquals(r3.getRoutees().get(1), routeeList.get(0));
-        Assert.assertEquals(r3.getRoutees().get(2), routeeList.get(1));
+        Assert.assertEquals(r2.getRoutees().get(1), routeeList.get(0));
+        Assert.assertEquals(r2.getRoutees().get(2), routeeList.get(1));
     }
 }
